@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSignalrChat", "SimpleSignalrChat.csproj", "{351746A9-7D6F-4B48-A956-C3EBBF5BC7B7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{351746A9-7D6F-4B48-A956-C3EBBF5BC7B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{351746A9-7D6F-4B48-A956-C3EBBF5BC7B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{351746A9-7D6F-4B48-A956-C3EBBF5BC7B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{351746A9-7D6F-4B48-A956-C3EBBF5BC7B7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {27B6A31F-F353-48EF-AE35-9D372E65BC68}
+	EndGlobalSection
+EndGlobal
