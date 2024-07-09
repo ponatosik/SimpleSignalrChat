@@ -5,7 +5,7 @@ namespace SimpleSignalrChat.DataAccess;
 
 public class ChatContext : DbContext
 {
-	private DbSet<Chat> Chats { get; set; }
-	private DbSet<User> Users { get; set; }
-	private DbSet<Message> Messages { get; set; }
+	public DbSet<Chat> Chats { get; set; }
+	public DbSet<User> Users { get; set; }
+	public DbSet<Message> Messages { get; set; }
 }
