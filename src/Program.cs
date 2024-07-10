@@ -1,5 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using SimpleSignalrChat.BusinessLogic.Services;
+using SimpleSignalrChat.BusinessLogic.Services.Interfaces;
 using SimpleSignalrChat.DataAccess;
+using SimpleSignalrChat.DataAccess.Repositories;
+using SimpleSignalrChat.DataAccess.Repositories.Interfaces;
+using SimpleSignalrChat.Presentaion.Rest.ExceptionHandling;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +16,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ChatContext>(options => options.UseInMemoryDatabase("ChatDb"));
+
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IApiErrorMapper, ApiErrorMapper>();
 
 var app = builder.Build();
 

@@ -25,6 +25,17 @@ public class Result<T>
 			onFailure(Error!);
 		}
 	}
+	public R Map<R>(Func<T, R> onSuccess, Func<Exception, R> onFailure)
+	{
+		if (IsSuccess)
+		{
+			return onSuccess(Value!);
+		}
+		else
+		{
+			return onFailure(Error!);
+		}
+	}
 
 	public static Result<T> Success(T value) => new Result<T>(true, value, null);
 	public static Result<T> Failure(Exception error) => new Result<T>(false, default, error);
@@ -47,6 +58,19 @@ public class Result
 
 	public static Result Success => new Result(true,  null);
 	public static Result Failure(Exception error) => new Result(false, error);
+
+	public R Map<R>(Func<R> onSuccess, Func<Exception, R> onFailure)
+	{
+		if (IsSuccess)
+		{
+			return onSuccess();
+		}
+		else
+		{
+			return onFailure(Error!);
+		}
+	}
+
 
 	public static implicit operator Result(Exception error) => Failure(error);
 }
