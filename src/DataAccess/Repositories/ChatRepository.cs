@@ -16,6 +16,12 @@ public class ChatRepository : IChatRepository
 
 	public async Task<Chat> AddChatAsync(Chat chat)
 	{
+		User? admin = _chatContext.Users.Find(chat.Admin.Id);
+		if (admin is null)
+		{
+			throw new EntityNotFoundException<User>(chat.Admin.Id);
+		}
+		chat.Admin = admin;
 		_chatContext.Chats.Add(chat);
 		await _chatContext.SaveChangesAsync();
 		return chat;

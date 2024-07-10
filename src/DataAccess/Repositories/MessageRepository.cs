@@ -16,6 +16,20 @@ public class MessageRepository : IMessageRepository
 
 	public async Task<Message> AddMessareAsync(Message message)
 	{
+		User? admin = await _chatContext.Users.FindAsync(message.Chat.Admin.Id);
+		if (admin is null)
+		{
+			throw new EntityNotFoundException<User>(message.Chat.Admin.Id);
+		}
+
+		Chat? chat = await _chatContext.Chats.FindAsync(message.Chat.Id);
+		if(chat is null)
+		{
+			throw new EntityNotFoundException<Chat>(message.Chat.Id);
+		}
+
+		message.Chat = chat;
+		message.Chat.Admin = admin;
 		_chatContext.Messages.Add(message);
 		_chatContext.SaveChanges();
 		return message;
