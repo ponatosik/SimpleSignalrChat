@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSignalrChat", "src\SimpleSignalrChat.csproj", "{351746A9-7D6F-4B48-A956-C3EBBF5BC7B7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSignalrChat.Test", "test\SimpleSignalrChat.Test\SimpleSignalrChat.Test.csproj", "{5D9A2A01-575B-4DBA-9FED-6859A0428610}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,10 +17,10 @@ Global
 		{351746A9-7D6F-4B48-A956-C3EBBF5BC7B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{351746A9-7D6F-4B48-A956-C3EBBF5BC7B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{351746A9-7D6F-4B48-A956-C3EBBF5BC7B7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{162164C1-8FA9-488E-B45A-4E1DD48E1919}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{162164C1-8FA9-488E-B45A-4E1DD48E1919}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{162164C1-8FA9-488E-B45A-4E1DD48E1919}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{162164C1-8FA9-488E-B45A-4E1DD48E1919}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D9A2A01-575B-4DBA-9FED-6859A0428610}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D9A2A01-575B-4DBA-9FED-6859A0428610}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D9A2A01-575B-4DBA-9FED-6859A0428610}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D9A2A01-575B-4DBA-9FED-6859A0428610}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
