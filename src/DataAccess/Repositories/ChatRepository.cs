@@ -47,9 +47,10 @@ public class ChatRepository : IChatRepository
 
 	public Task<Chat?> GetChatAsync(int id)
 	{
-		return _chatContext.Chats.
-			AsNoTracking().
-			FirstOrDefaultAsync(chat => chat.Id == id);
+		return _chatContext.Chats
+			.Include(chat => chat.Admin)
+			.AsNoTracking()
+			.FirstOrDefaultAsync(chat => chat.Id == id);
 	}
 
 	public Task<List<Chat>> SearchChatsAsync(string? name, int? adminId)

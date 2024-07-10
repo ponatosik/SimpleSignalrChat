@@ -64,6 +64,8 @@ public class MessageRepository : IMessageRepository
 	{
 		return _chatContext.Messages
 			.AsNoTracking()
+			.Include(message => message.Chat)
+			.Include(message => message.Sender)
 			.FirstOrDefaultAsync(message => message.Id == id);
 	}
 }
