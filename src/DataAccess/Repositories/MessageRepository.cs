@@ -14,7 +14,7 @@ public class MessageRepository : IMessageRepository
 		_chatContext = chatContext;
 	}
 
-	public async Task<Message> AddMessareAsync(Message message)
+	public async Task<Message> AddMessageAsync(Message message)
 	{
 		User? admin = await _chatContext.Users.FindAsync(message.Chat.Admin.Id);
 		if (admin is null)

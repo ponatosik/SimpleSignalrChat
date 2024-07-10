@@ -82,7 +82,7 @@ public class MessageRepositoryTest: RepositoryTest
 		
 		var message = new Message { Chat = chat, Sender = user, Content = "test", SentAt = DateTime.Now };
 
-		var result = await _messageRepository.AddMessareAsync(message);
+		var result = await _messageRepository.AddMessageAsync(message);
 		Assert.NotNull(result);
 		Assert.Equal(message.Chat.Id, result.Chat.Id);
 		Assert.Equal(message.Sender.Id, result.Sender.Id);
@@ -100,7 +100,7 @@ public class MessageRepositoryTest: RepositoryTest
 		DbContext.SaveChanges();
 		
 		var newMessage = new Message { Chat = chat, Sender = user, Content = "test", SentAt = DateTime.Now };
-		await _messageRepository.AddMessareAsync(newMessage);
+		await _messageRepository.AddMessageAsync(newMessage);
 
 		Assert.True(DbContext.Messages.Any(
 			message => message.Id == newMessage.Id &&
@@ -119,7 +119,7 @@ public class MessageRepositoryTest: RepositoryTest
 		DbContext.SaveChanges();
 		
 		var newMessage = new Message { Chat = chat, Sender = user, Content = "test", SentAt = DateTime.Now };
-		await Assert.ThrowsAsync<EntityNotFoundException<Chat>>(() => _messageRepository.AddMessareAsync(newMessage));
+		await Assert.ThrowsAsync<EntityNotFoundException<Chat>>(() => _messageRepository.AddMessageAsync(newMessage));
 	}
 
 	[Fact]
