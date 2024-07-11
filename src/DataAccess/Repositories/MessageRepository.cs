@@ -51,6 +51,7 @@ public class MessageRepository : IMessageRepository
 	{
 		Chat? chatEnity = await _chatContext.Chats
 			.Include(chat => chat.Messages)
+			.ThenInclude(message => message.Sender)
 			.FirstOrDefaultAsync(chat => chat.Id == chat.Id);
 
 		if(chatEnity is null)
