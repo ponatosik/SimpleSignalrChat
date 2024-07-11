@@ -34,7 +34,10 @@ public class MessagesController : ControllerBase
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Post(int chatId, CreateMessageRequest request, [FromHeader, Required] int userId)
+	public async Task<IActionResult> Post(
+		int chatId,
+		CreateMessageRequest request,
+		[FromHeader(Name = "Authorization"), Required] int userId)
 	{
 		var result = await _messageService.AddMessageAsync(chatId, userId, request.Content);
 		return result.Map(
@@ -42,8 +45,11 @@ public class MessagesController : ControllerBase
 			_errorMapper.MapToActionResult);
 	}
 
-	[HttpDelete]
-	public async Task<IActionResult> Delete(int chatId, int id, [FromHeader, Required] int userId)
+	[HttpDelete("{id}")]
+	public async Task<IActionResult> Delete(
+		int chatId,
+		int id,
+		[FromHeader(Name = "Authorization"), Required] int userId)
 	{
 		var result = await _messageService.DeleteMessageAsync(id, userId);
 		return result.Map(NoContent, _errorMapper.MapToActionResult);

@@ -35,8 +35,8 @@ public class UsersController : ControllerBase
 			_errorMapper.MapToActionResult);
 	}
 
-	[HttpDelete("{id}")]
-	public async Task<IActionResult> Delete([FromHeader, Required] int userId)
+	[HttpDelete()]
+	public async Task<IActionResult> Delete([FromHeader(Name = "Authorization"), Required] int userId)
 	{
 		var result = await _userService.DeleteUserAsync(userId);
 		return result.Map(NoContent, _errorMapper.MapToActionResult);

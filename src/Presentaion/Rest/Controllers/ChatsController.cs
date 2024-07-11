@@ -20,9 +20,9 @@ public class ChatsController : ControllerBase
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> Get([FromQuery] string? filted, [FromQuery] int? adminId)
+	public async Task<IActionResult> Get([FromQuery] string? filter, [FromQuery] int? adminId)
 	{
-		var result = await _chatService.GetAllChatsAsync(filted, adminId);
+		var result = await _chatService.GetAllChatsAsync(filter, adminId);
 		return result.Map(Ok, _errorMapper.MapToActionResult);
 	}
 
@@ -34,7 +34,9 @@ public class ChatsController : ControllerBase
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Post(CreateChatRequest request, [FromHeader, Required] int userId)
+	public async Task<IActionResult> Post(
+		CreateChatRequest request,
+		[FromHeader(Name = "Authorization"), Required] int userId)
 	{
 		var result = await _chatService.CreateChatAsync(userId, request.ChatName);
 		return result.Map(
@@ -43,14 +45,19 @@ public class ChatsController : ControllerBase
 	}
 
 	[HttpPut("{id}")]
-	public async Task<IActionResult> Put(CreateChatRequest request, int id, [FromHeader, Required] int userId)
+	public async Task<IActionResult> Put(
+		CreateChatRequest request,
+		int id,
+		[FromHeader(Name = "Authorization"), Required] int userId)
 	{
 		var result = await _chatService.UpdateChatAsync(id, request.ChatName, userId);
 		return result.Map(Ok, _errorMapper.MapToActionResult);
 	}
 
 	[HttpDelete("{id}")]
-	public async Task<IActionResult> Delete(int id, [FromHeader, Required] int userId)
+	public async Task<IActionResult> Delete(
+		int id, 
+		[FromHeader(Name = "Authorization"), Required] int userId)
 	{
 		var result = await _chatService.DeleteChatAsync(id, userId);
 		return result.Map(NoContent, _errorMapper.MapToActionResult);
