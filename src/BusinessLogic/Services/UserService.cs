@@ -1,4 +1,5 @@
 ﻿using SimpleSignalrChat.BusinessLogic.Abstractions;
+using SimpleSignalrChat.BusinessLogic.DTOs;
 using SimpleSignalrChat.BusinessLogic.Exceptions.NotFound;
 using SimpleSignalrChat.BusinessLogic.Services.Interfaces;
 using SimpleSignalrChat.DataAccess.Entities;
@@ -16,20 +17,20 @@ public class UserService: IUserService
 		_userRepository = userRepository;
 	}
 
-	public async Task<Result<User>> GetUserAsync(int id) 
+	public async Task<Result<UserDto>> GetUserAsync(int id) 
 	{
 		User? user = await _userRepository.GetUserAsync(id);
 		if(user is null)
 		{
 			return new UserNotFoundException(id);
 		}
-		return user!;
+		return UserDto.From(user!);
 	}
 
-	public async Task<Result<User>> CreateUserAsync(string name)
+	public async Task<Result<UserDto>> CreateUserAsync(string name)
 	{
 		User user = new User() { Name = name };
-		return (await _userRepository.AddUserAsync(user))!;
+		return UserDto.From((await _userRepository.AddUserAsync(user))!);
 	}
 
 	public async Task<Result> DeleteUserAsync(int id)

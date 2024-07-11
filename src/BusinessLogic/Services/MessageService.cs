@@ -1,4 +1,5 @@
 ﻿using SimpleSignalrChat.BusinessLogic.Abstractions;
+using SimpleSignalrChat.BusinessLogic.DTOs;
 using SimpleSignalrChat.BusinessLogic.Exceptions.NotEnoughPrivilege;
 using SimpleSignalrChat.BusinessLogic.Exceptions.NotFound;
 using SimpleSignalrChat.BusinessLogic.Services.Interfaces;
@@ -20,7 +21,7 @@ public class MessageService : IMessageService
 		_userRepository = userRepository;
 	}
 
-	public async Task<Result<Message>> AddMessageAsync(int chatId, int userId, string content)
+	public async Task<Result<MessageInfoDto>> AddMessageAsync(int chatId, int userId, string content)
 	{
 		User? user = await _userRepository.GetUserAsync(userId);
 		if (user is null)
@@ -35,7 +36,7 @@ public class MessageService : IMessageService
 		}
 
 		Message message = new Message() { Chat = chat, Sender = user, Content = content, SentAt = DateTime.Now };
-		return (await _messageRepository.AddMessageAsync(message))!;
+		return MessageInfoDto.From((await _messageRepository.AddMessageAsync(message))!);
 	}
 
 	public async Task<Result> DeleteMessageAsync(int id, int userId)
@@ -60,7 +61,7 @@ public class MessageService : IMessageService
 		return Result.Success;
 	}
 
-	public async Task<Result<List<Message>>> GetChatMessagesAsync(int chatId)
+	public async Task<Result<List<MessageDto>>> GetChatMessagesAsync(int chatId)
 	{
 		Chat? chat = await _chatRepository.GetChatAsync(chatId);
 		if (chat is null)
@@ -68,16 +69,16 @@ public class MessageService : IMessageService
 			return new ChatNotFoundException(chatId);
 		}
 
-		return await _messageRepository.GetChatMessagesAsync(chat);
+		return (await _messageRepository.GetChatMessagesAsync(chat)).Select(MessageDto.From).ToList();
 	}
 
-	public async Task<Result<Message>> GetMessageAsync(int id)
+	public async Task<Result<MessageInfoDto>> GetMessageAsync(int id)
 	{
 		Message? message = await _messageRepository.GetMessageAsync(id);
 		if (message is null)
 		{
 			return new MessageNotFoundException(id);
 		}
-		return message;
+		return MessageInfoDto.From(message);
 	}
 }

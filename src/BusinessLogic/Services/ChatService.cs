@@ -1,4 +1,5 @@
 ﻿using SimpleSignalrChat.BusinessLogic.Abstractions;
+using SimpleSignalrChat.BusinessLogic.DTOs;
 using SimpleSignalrChat.BusinessLogic.Exceptions.NotEnoughPrivilege;
 using SimpleSignalrChat.BusinessLogic.Exceptions.NotFound;
 using SimpleSignalrChat.BusinessLogic.Services.Interfaces;
@@ -19,12 +20,12 @@ public class ChatService : IChatService
 		_userRepository = userRepository;
 	}
 
-	public async Task<Result<Chat>> CreateChatAsync(int adminId, string name)
+	public async Task<Result<ChatInfoDto>> CreateChatAsync(int adminId, string name)
 	{
 		Chat chat = new Chat() { Admin = new User() { Id = adminId }, Name = name };
 		try
 		{
-			return await _chatRepository.AddChatAsync(chat);
+			return ChatInfoDto.From(await _chatRepository.AddChatAsync(chat));
 		}
 		catch (EntityNotFoundException<User> exception)
 		{
@@ -55,28 +56,28 @@ public class ChatService : IChatService
 		return Result.Success;
 	}
 
-	public async Task<Result<List<Chat>>> GetAllChatsAsync(string? nameFilter = null, int? adminId = null)
+	public async Task<Result<List<ChatDto>>> GetAllChatsAsync(string? nameFilter = null, int? adminId = null)
 	{
 		if(nameFilter is null && adminId is null) {
-			return await _chatRepository.GetAllChatsAsync();
+			return (await _chatRepository.GetAllChatsAsync()).Select(ChatDto.From).ToList();
 		}
 		else
 		{
-			return await _chatRepository.SearchChatsAsync(nameFilter, adminId);
+			return (await _chatRepository.SearchChatsAsync(nameFilter, adminId)).Select(ChatDto.From).ToList();
 		}
 	}
 
-	public async Task<Result<Chat>> GetChatAsync(int id)
+	public async Task<Result<ChatInfoDto>> GetChatAsync(int id)
 	{
 		Chat? chat = await _chatRepository.GetChatAsync(id);
 		if(chat is null)
 		{
 			return new ChatNotFoundException(id);
 		}
-		return chat!;
+		return ChatInfoDto.From(chat!);
 	}
 
-	public async Task<Result<Chat>> UpdateChatAsync(int id, string newName, int userId)
+	public async Task<Result<ChatInfoDto>> UpdateChatAsync(int id, string newName, int userId)
 	{
 		User? user = await _userRepository.GetUserAsync(userId);
 		if (user is null)
@@ -96,6 +97,6 @@ public class ChatService : IChatService
 		}
 
 		Chat newChat = new Chat() { Id = id, Admin = new User() , Name = newName };
-		return (await _chatRepository.UpdateChatAsync(id, newChat))!;
+		return ChatInfoDto.From((await _chatRepository.UpdateChatAsync(id, newChat))!);
 	}
 }
