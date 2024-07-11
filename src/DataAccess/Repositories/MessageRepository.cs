@@ -16,10 +16,10 @@ public class MessageRepository : IMessageRepository
 
 	public async Task<Message> AddMessageAsync(Message message)
 	{
-		User? admin = await _chatContext.Users.FindAsync(message.Chat.Admin.Id);
-		if (admin is null)
+		User? sender = await _chatContext.Users.FindAsync(message.Sender.Id);
+		if (sender is null)
 		{
-			throw new EntityNotFoundException<User>(message.Chat.Admin.Id);
+			throw new EntityNotFoundException<User>(message.Sender.Id);
 		}
 
 		Chat? chat = await _chatContext.Chats.FindAsync(message.Chat.Id);
@@ -29,7 +29,7 @@ public class MessageRepository : IMessageRepository
 		}
 
 		message.Chat = chat;
-		message.Chat.Admin = admin;
+		message.Sender = sender;
 		_chatContext.Messages.Add(message);
 		_chatContext.SaveChanges();
 		return message;
@@ -49,7 +49,10 @@ public class MessageRepository : IMessageRepository
 
 	public async Task<List<Message>> GetChatMessagesAsync(Chat chat)
 	{
-		Chat? chatEnity = await _chatContext.Chats.FindAsync(chat.Id);
+		Chat? chatEnity = await _chatContext.Chats
+			.Include(chat => chat.Messages)
+			.FirstOrDefaultAsync(chat => chat.Id == chat.Id);
+
 		if(chatEnity is null)
 		{
 			throw new EntityNotFoundException<Chat>(chat.Id);
