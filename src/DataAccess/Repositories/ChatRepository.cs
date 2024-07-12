@@ -64,14 +64,20 @@ public class ChatRepository : IChatRepository
 
 	public async Task<Chat?> UpdateChatAsync(int id, Chat newChat)
 	{
-		Chat? chat = _chatContext.Chats.Find(id);
+		Chat? chat = await _chatContext.Chats
+			.Include(chat => chat.Admin)
+			.FirstOrDefaultAsync(chat => chat.Id == id);
 		if (chat is null)
 		{
 			return null;
 		}
 
-		chat = newChat;
-		_chatContext.Chats.Update(chat);
+		if (newChat.Admin is null)
+		{
+			newChat.Admin = chat.Admin;
+		}
+
+		_chatContext.Entry(chat).CurrentValues.SetValues(newChat);
 		await _chatContext.SaveChangesAsync();
 		return chat;
 	}
