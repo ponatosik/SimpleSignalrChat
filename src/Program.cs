@@ -1,4 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using SimpleSignalrChat;
+using SimpleSignalrChat.BusinessLogic.Events;
+using SimpleSignalrChat.BusinessLogic.Events.Implementation;
+using SimpleSignalrChat.BusinessLogic.Events.Interfaces;
 using SimpleSignalrChat.BusinessLogic.Services;
 using SimpleSignalrChat.BusinessLogic.Services.Interfaces;
 using SimpleSignalrChat.DataAccess;
@@ -26,6 +30,9 @@ builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IApiErrorMapper, ApiErrorMapper>();
+
+builder.Services.AddScoped<IEventPublisher, EventPublisher>();
+
 
 var app = builder.Build();
 

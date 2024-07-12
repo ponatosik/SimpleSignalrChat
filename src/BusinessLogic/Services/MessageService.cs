@@ -1,5 +1,7 @@
 ﻿using SimpleSignalrChat.BusinessLogic.Abstractions;
 using SimpleSignalrChat.BusinessLogic.DTOs;
+using SimpleSignalrChat.BusinessLogic.Events;
+using SimpleSignalrChat.BusinessLogic.Events.Interfaces;
 using SimpleSignalrChat.BusinessLogic.Exceptions.NotEnoughPrivilege;
 using SimpleSignalrChat.BusinessLogic.Exceptions.NotFound;
 using SimpleSignalrChat.BusinessLogic.Services.Interfaces;
@@ -13,12 +15,18 @@ public class MessageService : IMessageService
 	private readonly IMessageRepository _messageRepository;
 	private readonly IChatRepository _chatRepository;
 	private readonly IUserRepository _userRepository;
+	private readonly IEventPublisher? _eventPublisher;
 
-	public MessageService(IMessageRepository messageRepository, IChatRepository chatRepository, IUserRepository userRepository)
+	public MessageService(
+		IMessageRepository messageRepository,
+		IChatRepository chatRepository,
+		IUserRepository userRepository,
+		IEventPublisher? eventPublisher = null)
 	{
 		_messageRepository = messageRepository;
 		_chatRepository = chatRepository;
 		_userRepository = userRepository;
+		_eventPublisher = eventPublisher;
 	}
 
 	public async Task<Result<MessageInfoDto>> AddMessageAsync(int chatId, int userId, string content)
@@ -36,7 +44,9 @@ public class MessageService : IMessageService
 		}
 
 		Message message = new Message() { Chat = chat, Sender = user, Content = content, SentAt = DateTime.Now };
-		return MessageInfoDto.From((await _messageRepository.AddMessageAsync(message))!);
+		MessageInfoDto messageDto = MessageInfoDto.From((await _messageRepository.AddMessageAsync(message))!);
+		_eventPublisher?.Publish(new MessageCreatedEvent(messageDto));
+		return messageDto;
 	}
 
 	public async Task<Result> DeleteMessageAsync(int id, int userId)
@@ -58,6 +68,7 @@ public class MessageService : IMessageService
 		}
 
 		await _messageRepository.DeleteMessageAsync(id);
+		_eventPublisher?.Publish(new MessageDeletedEvent(id));
 		return Result.Success;
 	}
 

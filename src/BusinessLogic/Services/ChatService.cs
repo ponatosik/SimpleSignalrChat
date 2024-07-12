@@ -1,5 +1,7 @@
 ﻿using SimpleSignalrChat.BusinessLogic.Abstractions;
 using SimpleSignalrChat.BusinessLogic.DTOs;
+using SimpleSignalrChat.BusinessLogic.Events;
+using SimpleSignalrChat.BusinessLogic.Events.Interfaces;
 using SimpleSignalrChat.BusinessLogic.Exceptions.NotEnoughPrivilege;
 using SimpleSignalrChat.BusinessLogic.Exceptions.NotFound;
 using SimpleSignalrChat.BusinessLogic.Services.Interfaces;
@@ -13,11 +15,16 @@ public class ChatService : IChatService
 {
 	private readonly IChatRepository _chatRepository;
 	private readonly IUserRepository _userRepository;
+	private readonly IEventPublisher? _eventPublisher;
 
-	public ChatService(IChatRepository chatRepository, IUserRepository userRepository)
+	public ChatService(
+		IChatRepository chatRepository,
+		IUserRepository userRepository,
+		IEventPublisher? eventPublisher = null)
 	{
 		_chatRepository = chatRepository;
 		_userRepository = userRepository;
+		_eventPublisher = eventPublisher;
 	}
 
 	public async Task<Result<ChatInfoDto>> CreateChatAsync(int adminId, string name)
@@ -25,7 +32,9 @@ public class ChatService : IChatService
 		Chat chat = new Chat() { Admin = new User() { Id = adminId }, Name = name };
 		try
 		{
-			return ChatInfoDto.From(await _chatRepository.AddChatAsync(chat));
+			var chatDto = ChatInfoDto.From(await _chatRepository.AddChatAsync(chat));
+			_eventPublisher?.Publish(new ChatCreatedEvent(chatDto));
+			return chatDto;
 		}
 		catch (EntityNotFoundException<User> exception)
 		{
@@ -53,6 +62,7 @@ public class ChatService : IChatService
 		}
 
 		await _chatRepository.DeleteChatAsync(id);
+		_eventPublisher?.Publish(new ChatDeletedEvent(id));
 		return Result.Success;
 	}
 
@@ -97,6 +107,8 @@ public class ChatService : IChatService
 		}
 
 		Chat newChat = new Chat() { Id = id, Admin = new User() , Name = newName };
-		return ChatInfoDto.From((await _chatRepository.UpdateChatAsync(id, newChat))!);
+		ChatInfoDto chatDto = ChatInfoDto.From((await _chatRepository.UpdateChatAsync(id, newChat))!);
+		_eventPublisher?.Publish(new ChatUpdatedEvent(chatDto));
+		return chatDto;
 	}
 }
