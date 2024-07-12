@@ -36,6 +36,20 @@ public class Result<T>
 			return onFailure(Error!);
 		}
 	}
+	public void OnSuccess(Action<T> action)
+	{
+		if (IsSuccess)
+		{
+			action(Value!);
+		}
+	}
+	public void OnFailure(Action<Exception> action)
+	{
+		if (IsFailure)
+		{
+			action(Error!);
+		}
+	}
 
 	public static Result<T> Success(T value) => new Result<T>(true, value, null);
 	public static Result<T> Failure(Exception error) => new Result<T>(false, default, error);
@@ -56,7 +70,7 @@ public class Result
 		Error = error;
 	}
 
-	public static Result Success => new Result(true,  null);
+	public static Result Success => new Result(true, null);
 	public static Result Failure(Exception error) => new Result(false, error);
 
 	public R Map<R>(Func<R> onSuccess, Func<Exception, R> onFailure)
@@ -68,6 +82,20 @@ public class Result
 		else
 		{
 			return onFailure(Error!);
+		}
+	}
+	public void OnSuccess(Action action)
+	{
+		if (IsSuccess)
+		{
+			action();
+		}
+	}
+	public void OnFailure(Action<Exception> action)
+	{
+		if (IsFailure)
+		{
+			action(Error!);
 		}
 	}
 

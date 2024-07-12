@@ -67,8 +67,10 @@ public class MessageService : IMessageService
 			return new NotEnoughPrivilegeException("Sender", "Delete message");
 		}
 
+		MessageInfoDto messageDto = MessageInfoDto.From(message);
+
 		await _messageRepository.DeleteMessageAsync(id);
-		_eventPublisher?.Publish(new MessageDeletedEvent(id));
+		_eventPublisher?.Publish(new MessageDeletedEvent(messageDto));
 		return Result.Success;
 	}
 

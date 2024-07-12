@@ -5,4 +5,4 @@ namespace SimpleSignalrChat.BusinessLogic.Events;
 
 public record ChatCreatedEvent (ChatInfoDto Chat) : IEvent;
 public record ChatUpdatedEvent (ChatInfoDto Chat) : IEvent;
-public record ChatDeletedEvent (int ChatId) : IEvent;
+public record ChatDeletedEvent (ChatInfoDto Chat) : IEvent;

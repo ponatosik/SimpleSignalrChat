@@ -61,8 +61,10 @@ public class ChatService : IChatService
 			return new NotEnoughPrivilegeException("Admin", $"Delete chat \"{chat.Name}\"");
 		}
 
+		ChatInfoDto chatDto = ChatInfoDto.From(chat);
+
 		await _chatRepository.DeleteChatAsync(id);
-		_eventPublisher?.Publish(new ChatDeletedEvent(id));
+		_eventPublisher?.Publish(new ChatDeletedEvent(chatDto));
 		return Result.Success;
 	}
 

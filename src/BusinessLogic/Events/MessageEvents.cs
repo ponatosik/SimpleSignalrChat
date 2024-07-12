@@ -4,4 +4,4 @@ using SimpleSignalrChat.BusinessLogic.Events.Interfaces;
 namespace SimpleSignalrChat.BusinessLogic.Events;
 
 public record MessageCreatedEvent (MessageInfoDto Message) : IEvent;
-public record MessageDeletedEvent (int Id) : IEvent;
+public record MessageDeletedEvent (MessageInfoDto Message) : IEvent;

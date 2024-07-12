@@ -8,4 +8,9 @@ public record MessageDto(int Id, string Contet, int SenderId, DateTime SentAt)
 	{
 		return new MessageDto(message.Id, message.Content, message.Sender.Id, message.SentAt);
 	}
+
+	public static MessageDto From(MessageInfoDto message)
+	{
+		return new MessageDto(message.Id, message.Contet, message.SenderId, message.SentAt);
+	}
 }
