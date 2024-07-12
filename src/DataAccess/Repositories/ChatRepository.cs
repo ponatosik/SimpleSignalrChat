@@ -77,6 +77,7 @@ public class ChatRepository : IChatRepository
 			newChat.Admin = chat.Admin;
 		}
 
+		newChat.Id = chat.Id;
 		_chatContext.Entry(chat).CurrentValues.SetValues(newChat);
 		await _chatContext.SaveChangesAsync();
 		return chat;
